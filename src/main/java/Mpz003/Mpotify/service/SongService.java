@@ -21,8 +21,20 @@ public class SongService {
         return songRepository.findAll();
     }
 
-    public Optional<Song> getSongById(Integer id) {
-        return songRepository.findById(id);
+    public Song getSongById(int id) {
+        Optional<Song> result = songRepository.findById(id);
+
+        Song TheSong = null;
+
+        if (result.isPresent()) {
+            TheSong = result.get();
+        }
+        else {
+            // we didn't find the employee
+            throw new RuntimeException("Did not find employee id - " + id);
+        }
+
+        return TheSong;
     }
 
     public Song addSong(Song song) {

@@ -1,6 +1,7 @@
 package Mpz003.Mpotify.service;
 
 import Mpz003.Mpotify.dao.UserRepository;
+import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,20 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByUsername(Integer id) {
-        return userRepository.findById(id);
+    public User getUserByUsername(int id) {
+        Optional<User> result = userRepository.findById(id);
+
+        User TheUser = null;
+
+        if (result.isPresent()) {
+            TheUser = result.get();
+        }
+        else {
+            // we didn't find the employee
+            throw new RuntimeException("Did not find employee id - " + id);
+        }
+
+        return TheUser;
     }
 
     public User addUser(User user) {
