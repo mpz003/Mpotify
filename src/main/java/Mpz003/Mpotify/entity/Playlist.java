@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class PlayList {
+public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +17,11 @@ public class PlayList {
     @Column
     private String songArtist;
 
-    public PlayList(){
+    public Playlist(){
 
     }
 
-    public PlayList(String songName, String songArtist) {
+    public Playlist(String songName, String songArtist) {
         this.songName = songName;
         this.songArtist = songArtist;
     }
