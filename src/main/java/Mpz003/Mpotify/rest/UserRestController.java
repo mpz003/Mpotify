@@ -1,12 +1,15 @@
 package Mpz003.Mpotify.rest;
 
+import Mpz003.Mpotify.entity.Playlist;
 import Mpz003.Mpotify.entity.User;
 import Mpz003.Mpotify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/mpz")
@@ -38,8 +41,19 @@ public class UserRestController {
         return userService.addUser(user);
     }
 
+    @PutMapping("/users/{id}")
+    public User updatingUser(@PathVariable Integer id, @RequestBody User updatedUser){
+        return userService.updateUser(id,updatedUser);
+    }
+
     @DeleteMapping("/users/{username}")
-    public void deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
+    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("Deleted the user with id: " + id);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with id: " + id);
+        }
     }
 }

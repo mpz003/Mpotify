@@ -1,7 +1,6 @@
 package Mpz003.Mpotify.service;
 
 import Mpz003.Mpotify.dao.UserRepository;
-import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,17 @@ public class UserService {
 
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public User updateUser(Integer id, User updatedUser) {
+        return userRepository.findById(id)
+                .map(existingUser -> {
+                    existingUser.setUserName(updatedUser.getUserName());
+                    existingUser.setPassword(updatedUser.getPassword());
+                    existingUser.setEmail(updatedUser.getEmail());
+                    return userRepository.save(existingUser);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " not found"));
     }
 
 }

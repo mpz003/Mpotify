@@ -39,7 +39,7 @@ public class PlaylistService {
             playlist = result.get();
         }
         else {
-            // we didn't find the employee
+            // we didn't find the playlist
             throw new RuntimeException("Did not find employee id - " + id);
         }
 

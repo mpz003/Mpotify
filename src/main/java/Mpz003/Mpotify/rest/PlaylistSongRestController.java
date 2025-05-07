@@ -18,22 +18,14 @@ public class PlaylistSongRestController {
         this.playlistSongService = playlistSongService;
     }
 
-
-
-
-
-    @PostMapping("/playlistsongs")
-    public PlaylistSong addSongToPlaylist(@RequestBody PlaylistSong ps) {
-        return playlistSongService .addSongToPlaylist(ps);
-    }
-
-    @DeleteMapping("/playlistsongs/{id}")
-    public void removeSongFromPlaylist(@PathVariable Integer id) {
-        playlistSongService .removeSongFromPlaylist(id);
-    }
-
     @GetMapping("/playlistsongs")
     public List<PlaylistSong> getAllPlaylistSongs() {
-        return playlistSongService .getAllPlaylistSongs();
+        return playlistSongService.findAll();
     }
+
+    @GetMapping("/playlistsongs/{id}")
+    public PlaylistSong getPlaylistSongById(@PathVariable int id) {
+        return playlistSongService.findById(id);
+    }
+
 }

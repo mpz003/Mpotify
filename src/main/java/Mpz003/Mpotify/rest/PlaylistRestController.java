@@ -4,9 +4,12 @@ import Mpz003.Mpotify.dao.PlaylistRepository;
 import Mpz003.Mpotify.entity.Playlist;
 import Mpz003.Mpotify.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/mpz")
@@ -44,7 +47,13 @@ public class PlaylistRestController {
     }
 
     @DeleteMapping("/playlists/{id}")
-    public void deletePlaylist(@PathVariable Integer id) {
-        playlistService.deletePlaylist(id);
+    public ResponseEntity<String> deletePlaylist(@PathVariable Integer id) {
+        try {
+            playlistService.deletePlaylist(id);
+            return ResponseEntity.ok("Deleted the playlist with id: " + id);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Playlist not found with id: " + id);
+        }
     }
 }

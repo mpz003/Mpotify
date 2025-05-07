@@ -15,16 +15,12 @@ public class PlaylistSongService {
     public PlaylistSongService(PlaylistSongRepository playlistSongRepository) {
         this.playlistSongRepository = playlistSongRepository;
     }
-
-    public PlaylistSong addSongToPlaylist(PlaylistSong playlistSong) {
-        return playlistSongRepository.save(playlistSong);
-    }
-
-    public void removeSongFromPlaylist(Integer id) {
-        playlistSongRepository.deleteById(id);
-    }
-
-    public List<PlaylistSong> getAllPlaylistSongs() {
+    public List<PlaylistSong> findAll() {
         return playlistSongRepository.findAll();
+    }
+
+    public PlaylistSong findById(int id) {
+        return playlistSongRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("PlaylistSong not found with id: " + id));
     }
 }
