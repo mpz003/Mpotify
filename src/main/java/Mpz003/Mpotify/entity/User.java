@@ -3,21 +3,21 @@ package Mpz003.Mpotify.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "user")
 public class User {
 
     @Id
-    @Column
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(name = "user_name")
     private String userName;
 
-    @Column
+    @Column(name = "password")
     private String password;
 
-    @Column
+    @Column(name = "email")
     private String email;
 
     public User(){

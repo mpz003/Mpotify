@@ -3,18 +3,18 @@ package Mpz003.Mpotify.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "playlist_song")
 public class PlaylistSong {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private int id;
 
-    @Column
+    @Column(name = "song_id")
     private int songId;
 
-    @Column
+    @Column(name = "playlist_id")
     private int playlistId;
 
     public PlaylistSong(){

@@ -3,25 +3,29 @@ package Mpz003.Mpotify.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "playlist")
 public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private int id;
 
-    @Column
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "song_name")
     private String songName;
 
-    @Column
+    @Column(name = "song_artist")
     private String songArtist;
 
     public Playlist(){
 
     }
 
-    public Playlist(String songName, String songArtist) {
+    public Playlist(String name, String songName, String songArtist) {
+        this.name=name;
         this.songName = songName;
         this.songArtist = songArtist;
     }
@@ -50,10 +54,19 @@ public class Playlist {
         this.songArtist = songArtist;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "PlayList{" +
+        return "Playlist{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 ", songName='" + songName + '\'' +
                 ", songArtist='" + songArtist + '\'' +
                 '}';

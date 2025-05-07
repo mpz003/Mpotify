@@ -4,23 +4,23 @@ package Mpz003.Mpotify.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "song")
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private int id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
+    @Column(name = "artist")
     private String artist;
 
-    @Column
+    @Column(name = "album")
     private String album;
 
-    @Column
+    @Column(name = "length")
     private String length;
 
     public Song() {

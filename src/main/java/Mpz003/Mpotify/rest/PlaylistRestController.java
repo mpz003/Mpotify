@@ -38,6 +38,11 @@ public class PlaylistRestController {
         return playlistService.addPlaylist(playlist);
     }
 
+    @PutMapping("/playlists/{id}")
+    public Playlist updatePlaylist(@PathVariable Integer id, @RequestBody Playlist updatedPlaylist){
+        return playlistService.updatePlaylist(id,updatedPlaylist);
+    }
+
     @DeleteMapping("/playlists/{id}")
     public void deletePlaylist(@PathVariable Integer id) {
         playlistService.deletePlaylist(id);
