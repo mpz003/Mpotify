@@ -47,4 +47,10 @@ public class PlaylistSongService {
 
         return playlistSongRepository.save(ps);
     }
+
+    public List<Song> getSongsOfPlaylist(Integer playlistId) {
+        return playlistSongRepository.findSongsByPlaylistId(playlistId);
+    }
+
+
 }

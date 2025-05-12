@@ -50,8 +50,6 @@ public class PlaylistService {
         return playlistRepository.findById(id)
                 .map(existingPlaylist -> {
                     existingPlaylist.setName(updatedPlaylist.getName());
-                    existingPlaylist.setSongName(updatedPlaylist.getSongName());
-                    existingPlaylist.setSongArtist(updatedPlaylist.getSongArtist());
                     return playlistRepository.save(existingPlaylist);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Playlist with ID " + id + " not found"));

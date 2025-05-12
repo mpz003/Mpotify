@@ -2,8 +2,10 @@ package Mpz003.Mpotify.rest;
 
 import Mpz003.Mpotify.dao.PlaylistRepository;
 import Mpz003.Mpotify.entity.Playlist;
+import Mpz003.Mpotify.entity.PlaylistSong;
 import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.service.PlaylistService;
+import Mpz003.Mpotify.service.PlaylistSongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +19,16 @@ import java.util.NoSuchElementException;
 public class PlaylistRestController {
 
     private PlaylistService playlistService;
+    private PlaylistSongService playlistSongService;
 
     @Autowired
-    public PlaylistRestController(PlaylistService playlistService) {
+    public PlaylistRestController(PlaylistService playlistService, PlaylistSongService playlistSongService) {
         this.playlistService = playlistService;
+        this.playlistSongService = playlistSongService;
     }
+
+
+
 
     @GetMapping("/playlists")
     public List<Playlist> getAllPlaylists() {
@@ -58,5 +65,16 @@ public class PlaylistRestController {
         }
     }
 
+    @PostMapping("/playlists/{playlistId}/songs/{songId}")
+    public ResponseEntity<PlaylistSong> addSongToPlaylist(@PathVariable Integer playlistId,
+                                                          @PathVariable Integer songId) {
+        PlaylistSong ps = playlistSongService.addSongToPlaylist(songId, playlistId);
+        return ResponseEntity.ok(ps);
+    }
+
+    @GetMapping("/playlists/{playlistId}/songs")
+    public List<Song> getSongsForPlaylist(@PathVariable Integer playlistId) {
+        return playlistSongService.getSongsOfPlaylist(playlistId);
+    }
 
 }

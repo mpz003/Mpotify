@@ -12,11 +12,11 @@ public class PlaylistSong {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "song_id")
+    @JoinColumn(name = "song_id", nullable = false)
     private Song song;
 
     @ManyToOne
-    @JoinColumn(name = "playlist_id")
+    @JoinColumn(name = "playlist_id", nullable = false)
     private Playlist playlist;
 
     public PlaylistSong(){

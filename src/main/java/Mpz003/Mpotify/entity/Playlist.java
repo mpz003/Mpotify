@@ -14,20 +14,13 @@ public class Playlist {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "song_name")
-    private String songName;
-
-    @Column(name = "song_artist")
-    private String songArtist;
-
     public Playlist(){
 
     }
 
-    public Playlist(String name, String songName, String songArtist) {
+    public Playlist(String name) {
         this.name=name;
-        this.songName = songName;
-        this.songArtist = songArtist;
+
     }
 
     public int getId() {
@@ -38,21 +31,7 @@ public class Playlist {
         this.id = id;
     }
 
-    public String getSongName() {
-        return songName;
-    }
 
-    public void setSongName(String songName) {
-        this.songName = songName;
-    }
-
-    public String getSongArtist() {
-        return songArtist;
-    }
-
-    public void setSongArtist(String songArtist) {
-        this.songArtist = songArtist;
-    }
 
     public String getName() {
         return name;
@@ -67,8 +46,6 @@ public class Playlist {
         return "Playlist{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", songName='" + songName + '\'' +
-                ", songArtist='" + songArtist + '\'' +
                 '}';
     }
 }
