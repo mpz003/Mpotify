@@ -44,12 +44,22 @@ public class SecurityConfig {
                 .roles("ADMIN")
                 .build();
 
-        UserDetails user = User.withUsername("user")
-                .password(encoder.encode("userpass"))
+        UserDetails user1 = User.withUsername("ali")
+                .password(encoder.encode("ali123"))
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(admin, user);
+        UserDetails user2 = User.withUsername("fatemeh")
+                .password(encoder.encode("fatemeh123"))
+                .roles("USER")
+                .build();
+
+        UserDetails user3 = User.withUsername("omid")
+                .password(encoder.encode("omid123"))
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(admin, user1, user2,user3);
     }
 
 
