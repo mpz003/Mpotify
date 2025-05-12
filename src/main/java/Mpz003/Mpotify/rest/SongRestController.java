@@ -67,6 +67,13 @@ public class SongRestController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/songs/search")
+    public List<Song> searchSongs(@RequestParam(required = false) String name,
+                                  @RequestParam(required = false) String artist,
+                                  @RequestParam(required = false) String album) {
+        return songService.searchSongs(name, artist, album);
+    }
 
 }
 

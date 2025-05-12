@@ -56,4 +56,8 @@ public class PlaylistService {
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Playlist with ID " + id + " not found"));
     }
+
+    public List<Playlist> searchPlaylistByName(String name) {
+        return playlistRepository.findByNameContainingIgnoreCase(name);
+    }
 }

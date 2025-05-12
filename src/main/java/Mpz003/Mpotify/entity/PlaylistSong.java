@@ -11,51 +11,49 @@ public class PlaylistSong {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "song_id")
-    private int songId;
+    @ManyToOne
+    @JoinColumn(name = "song_id")
+    private Song song;
 
-    @Column(name = "playlist_id")
-    private int playlistId;
+    @ManyToOne
+    @JoinColumn(name = "playlist_id")
+    private Playlist playlist;
 
     public PlaylistSong(){
 
     }
 
-    public PlaylistSong(int songId, int playlistId) {
-        this.songId = songId;
-        this.playlistId = playlistId;
+    public PlaylistSong(Song song, Playlist playlist) {
+        this.song = song;
+        this.playlist = playlist;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Song getSong() {
+        return song;
     }
 
-    public int getSongId() {
-        return songId;
+    public void setSong(Song song) {
+        this.song = song;
     }
 
-    public void setSongId(int songId) {
-        this.songId = songId;
+    public Playlist getPlaylist() {
+        return playlist;
     }
 
-    public int getPlaylistId() {
-        return playlistId;
-    }
-
-    public void setPlaylistId(int playlistId) {
-        this.playlistId = playlistId;
+    public void setPlaylist(Playlist playlist) {
+        this.playlist = playlist;
     }
 
     @Override
     public String toString() {
         return "PlaylistSong{" +
                 "id=" + id +
-                ", songId=" + songId +
-                ", playlistId=" + playlistId +
+                ", song=" + song +
+                ", playlist=" + playlist +
                 '}';
     }
 }

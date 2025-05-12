@@ -1,6 +1,7 @@
 package Mpz003.Mpotify.rest;
 
 import Mpz003.Mpotify.entity.Playlist;
+import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.entity.User;
 import Mpz003.Mpotify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class UserRestController {
         return userService.updateUser(id,updatedUser);
     }
 
-    @DeleteMapping("/users/{username}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
         try {
             userService.deleteUser(id);
@@ -56,4 +57,10 @@ public class UserRestController {
                     .body("User not found with id: " + id);
         }
     }
+    @GetMapping("/users/search")
+    public List<User> searchUsers(@RequestParam(required = false) String userName,
+                                  @RequestParam(required = false) String email) {
+        return userService.searchUsers(userName, email);
+    }
+
 }

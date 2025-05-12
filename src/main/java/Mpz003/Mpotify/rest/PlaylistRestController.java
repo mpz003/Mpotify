@@ -2,6 +2,7 @@ package Mpz003.Mpotify.rest;
 
 import Mpz003.Mpotify.dao.PlaylistRepository;
 import Mpz003.Mpotify.entity.Playlist;
+import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,4 +57,6 @@ public class PlaylistRestController {
                     .body("Playlist not found with id: " + id);
         }
     }
+
+
 }

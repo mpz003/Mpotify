@@ -3,7 +3,9 @@ package Mpz003.Mpotify.service;
 import Mpz003.Mpotify.dao.UserRepository;
 import Mpz003.Mpotify.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +57,9 @@ public class UserService {
                 })
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " not found"));
     }
+    public List<User> searchUsers(String userName, String email) {
+        return userRepository.searchUsers(userName, email);
+    }
+
 
 }

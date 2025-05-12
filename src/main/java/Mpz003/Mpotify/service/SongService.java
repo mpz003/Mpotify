@@ -56,4 +56,7 @@ public class SongService {
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Song with ID " + id + " not found"));
     }
+    public List<Song> searchSongs(String name, String artist, String album) {
+        return songRepository.searchSongs(name, artist, album);
+    }
 }
