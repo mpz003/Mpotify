@@ -1,5 +1,6 @@
 package Mpz003.Mpotify.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,12 +15,18 @@ public class Playlist {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
+
     public Playlist(){
 
     }
 
-    public Playlist(String name) {
+    public Playlist(String name, User user) {
         this.name=name;
+        this.user=user;
 
     }
 
@@ -31,14 +38,20 @@ public class Playlist {
         this.id = id;
     }
 
-
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

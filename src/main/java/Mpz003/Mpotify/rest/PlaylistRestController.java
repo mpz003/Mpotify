@@ -77,4 +77,16 @@ public class PlaylistRestController {
         return playlistSongService.getSongsOfPlaylist(playlistId);
     }
 
+    @PostMapping("/playlists/users/{userId}/playlists")
+    public ResponseEntity<Playlist> createPlaylist(@PathVariable Integer userId,
+                                                   @RequestParam String name) {
+        Playlist playlist = playlistService.createPlaylistForUser(userId, name);
+        return ResponseEntity.ok(playlist);
+    }
+
+    @GetMapping("/playlists/users/{userId}/playlists")
+    public List<Playlist> getUserPlaylists(@PathVariable Integer userId) {
+        return playlistService.getPlaylistsByUserId(userId);
+    }
+
 }

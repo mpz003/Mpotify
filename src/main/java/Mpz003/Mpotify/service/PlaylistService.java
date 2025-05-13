@@ -1,8 +1,10 @@
 package Mpz003.Mpotify.service;
 
 import Mpz003.Mpotify.dao.PlaylistRepository;
+import Mpz003.Mpotify.dao.UserRepository;
 import Mpz003.Mpotify.entity.Playlist;
 import Mpz003.Mpotify.entity.Song;
+import Mpz003.Mpotify.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import java.util.Optional;
 @Service
 public class PlaylistService {
     private PlaylistRepository playlistRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public PlaylistService(PlaylistRepository playlistRepository) {
+    public PlaylistService(PlaylistRepository playlistRepository, UserRepository userRepository) {
         this.playlistRepository = playlistRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Playlist> getAllPlaylists() {
@@ -57,5 +61,17 @@ public class PlaylistService {
 
     public List<Playlist> searchPlaylistByName(String name) {
         return playlistRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public Playlist createPlaylistForUser(Integer userId, String name) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        Playlist playlist = new Playlist(name, user);
+        return playlistRepository.save(playlist);
+    }
+
+    public List<Playlist> getPlaylistsByUserId(Integer userId) {
+        return playlistRepository.findByUserId(userId);
     }
 }

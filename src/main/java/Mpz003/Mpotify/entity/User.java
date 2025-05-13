@@ -2,6 +2,8 @@ package Mpz003.Mpotify.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -19,6 +21,9 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Playlist> playlists;
 
     public User(){
 
@@ -62,6 +67,14 @@ public class User {
         this.email = email;
     }
 
+    public List<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(List<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -69,6 +82,7 @@ public class User {
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", playlists=" + playlists +
                 '}';
     }
 }
