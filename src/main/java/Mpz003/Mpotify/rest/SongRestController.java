@@ -34,7 +34,7 @@ public class SongRestController {
         Song theSong = songService.getSongById(id);
 
         if (theSong == null) {
-            throw new RuntimeException("Employee id not found - " + id);
+            throw new RuntimeException("Song id not found - " + id);
         }
 
         return theSong;
