@@ -13,14 +13,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
+
+    @Column(name = "role")
+    private String role; // should be "ADMIN" or "USER"
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Playlist> playlists;
@@ -29,10 +33,11 @@ public class User {
 
     }
 
-    public User(String userName, String password, String email) {
+    public User(String userName, String password, String email, String role) {
         this.userName = userName;
         this.password = password;
         this.email = email;
+        this.role=role;
     }
 
     public int getId() {
@@ -67,6 +72,14 @@ public class User {
         this.email = email;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public List<Playlist> getPlaylists() {
         return playlists;
     }
@@ -82,6 +95,7 @@ public class User {
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
                 ", playlists=" + playlists +
                 '}';
     }

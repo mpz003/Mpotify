@@ -1,5 +1,6 @@
 package Mpz003.Mpotify.rest;
 
+import Mpz003.Mpotify.dao.UserRepository;
 import Mpz003.Mpotify.entity.Playlist;
 import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.entity.User;
@@ -7,6 +8,7 @@ import Mpz003.Mpotify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +18,14 @@ import java.util.NoSuchElementException;
 @RequestMapping("/mpz")
 public class UserRestController {
     private UserService userService;
+    private UserRepository userRepository;
+    private PasswordEncoder encoder;
 
     @Autowired
-    public UserRestController(UserService userService) {
+    public UserRestController(UserService userService,UserRepository userRepository, PasswordEncoder encoder) {
         this.userService = userService;
+        this.encoder=encoder;
+        this.userRepository=userRepository;
     }
 
     @GetMapping("/users")
@@ -62,5 +68,17 @@ public class UserRestController {
                                   @RequestParam(required = false) String email) {
         return userService.searchUsers(userName, email);
     }
+
+    @PostMapping("/users/register")
+    public ResponseEntity<String> register(@RequestBody User user) {
+        if (userRepository.findByUserName(user.getUserName()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username already exists");
+        }
+
+        user.setPassword(encoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully");
+    }
+
 
 }

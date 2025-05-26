@@ -21,7 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
-
     private UserRepository userRepository;
 
     public SecurityConfig(UserRepository userRepository) {
@@ -33,41 +32,18 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/mpz/songs/**").hasAnyRole("USER", "ADMIN") // ✅ explicitly allow
-                        .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/mpz/**").hasRole("ADMIN") // ❌ blocks everything else for USER
-                        .anyRequest().authenticated()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()                     // ✅ allow Swagger
+                        .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()                 // ✅ allow user registration
+                        .requestMatchers(HttpMethod.GET, "/mpz/songs/**").hasAnyRole("USER", "ADMIN")        // ✅ read songs
+                        .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")                    // ✅ playlists
+                        .requestMatchers("/mpz/**").hasRole("ADMIN")                                          // ❌ fallback
+                        .anyRequest().authenticated()                                                        // 🚫 all else must auth
                 )
+
 
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
-
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails admin = User.withUsername("admin")
-                .password(encoder.encode("adminpass"))
-                .roles("ADMIN")
-                .build();
-
-        UserDetails user1 = User.withUsername("ali")
-                .password(encoder.encode("ali123"))
-                .roles("USER")
-                .build();
-
-        UserDetails user2 = User.withUsername("fatemeh")
-                .password(encoder.encode("fatemeh123"))
-                .roles("USER")
-                .build();
-
-        UserDetails user3 = User.withUsername("omid")
-                .password(encoder.encode("omid123"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, user1, user2,user3);
-    }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
