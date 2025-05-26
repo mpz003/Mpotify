@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -17,15 +19,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userName));
+
+        // ⚠️ Ensure null-safe and normalized role
+        String role = Optional.ofNullable(user.getRole())
+                .orElse("USER") // fallback default
+                .toUpperCase();
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUserName())
                 .password(user.getPassword())
-                .roles(user.getRole().toUpperCase()) // 👈 use role from DB
+                .roles(role) // Spring auto-prefixes "ROLE_"
                 .build();
     }
-
 }

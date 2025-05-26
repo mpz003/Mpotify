@@ -8,6 +8,7 @@ import Mpz003.Mpotify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,5 +81,10 @@ public class UserRestController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-
+    @GetMapping("/debug/roles")
+    public ResponseEntity<String> debugRoles() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+        return ResponseEntity.ok("User: " + username + ", Roles: " + roles);
+    }
 }

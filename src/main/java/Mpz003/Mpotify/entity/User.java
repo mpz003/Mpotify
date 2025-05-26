@@ -22,7 +22,7 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private String role; // should be "ADMIN" or "USER"
 
 

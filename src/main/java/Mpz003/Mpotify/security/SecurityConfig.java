@@ -32,12 +32,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()                     // ✅ allow Swagger
-                        .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()                 // ✅ allow user registration
-                        .requestMatchers(HttpMethod.GET, "/mpz/songs/**").hasAnyRole("USER", "ADMIN")        // ✅ read songs
-                        .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")                    // ✅ playlists
-                        .requestMatchers("/mpz/**").hasRole("ADMIN")                                          // ❌ fallback
-                        .anyRequest().authenticated()                                                        // 🚫 all else must auth
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/mpz/users/register").permitAll()
+                        .requestMatchers("/mpz/songs/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/mpz/users/**").hasRole("ADMIN")
+                        .requestMatchers("/mpz/**").hasRole("ADMIN") // fallback for all other /mpz endpoints
+                        .anyRequest().denyAll() // ✅ BLOCK everything not under /mpz
                 )
 
 
