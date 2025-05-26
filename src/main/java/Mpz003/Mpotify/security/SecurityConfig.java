@@ -22,9 +22,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     private UserRepository userRepository;
+    private UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(UserRepository userRepository) {
+    public SecurityConfig(UserRepository userRepository, UserDetailsServiceImpl userDetailsService) {
         this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -32,16 +34,21 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // ✅ Allow registration without auth
                         .requestMatchers(HttpMethod.POST, "/mpz/users/register").permitAll()
+
+                        // ✅ Restrict all other mpz APIs
+                        .requestMatchers("/mpz/users/**").hasRole("ADMIN")
                         .requestMatchers("/mpz/songs/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/mpz/users/**").hasRole("ADMIN")
-                        .requestMatchers("/mpz/**").hasRole("ADMIN") // fallback for all other /mpz endpoints
-                        .anyRequest().denyAll() // ✅ BLOCK everything not under /mpz
+                        .requestMatchers("/mpz/**").hasRole("ADMIN")
+
+                        // ✅ Allow Swagger access without login
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // ❌ Deny anything else
+                        .anyRequest().denyAll()
                 )
-
-
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

@@ -77,7 +77,9 @@ public class UserRestController {
         }
 
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole("USER"); // ✅ assign USER role by default
         userRepository.save(user);
+
         return ResponseEntity.ok("User registered successfully");
     }
 
