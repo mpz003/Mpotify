@@ -5,6 +5,7 @@ package Mpz003.Mpotify.security;
 import Mpz003.Mpotify.dao.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -30,26 +31,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain swaggerSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**")
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain appSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ Allow registration without auth
                         .requestMatchers(HttpMethod.POST, "/mpz/users/register").permitAll()
-
-                        // ✅ Restrict all other mpz APIs
                         .requestMatchers("/mpz/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/mpz/songs/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/mpz/songs/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/mpz/songs/**").hasRole("ADMIN")
                         .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/mpz/**").hasRole("ADMIN")
-
-                        // ✅ Allow Swagger access without login
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-
-                        // ❌ Deny anything else
                         .anyRequest().denyAll()
                 )
+                .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
