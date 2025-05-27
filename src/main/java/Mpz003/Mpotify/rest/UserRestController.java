@@ -83,10 +83,4 @@ public class UserRestController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @GetMapping("/debug/roles")
-    public ResponseEntity<String> debugRoles() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        String roles = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
-        return ResponseEntity.ok("User: " + username + ", Roles: " + roles);
-    }
 }

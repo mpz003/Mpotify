@@ -39,7 +39,8 @@ public class SecurityConfig {
 
                         // ✅ Restrict all other mpz APIs
                         .requestMatchers("/mpz/users/**").hasRole("ADMIN")
-                        .requestMatchers("/mpz/songs/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/mpz/songs/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/mpz/songs/**").hasRole("ADMIN")
                         .requestMatchers("/mpz/playlists/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/mpz/**").hasRole("ADMIN")
 
