@@ -6,6 +6,8 @@ import Mpz003.Mpotify.entity.Playlist;
 import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,8 +43,7 @@ public class PlaylistService {
 
         if (result.isPresent()) {
             playlist = result.get();
-        }
-        else {
+        } else {
             // we didn't find the playlist
             throw new RuntimeException("Did not find employee id - " + id);
         }
@@ -74,4 +75,22 @@ public class PlaylistService {
     public List<Playlist> getPlaylistsByUserId(Integer userId) {
         return playlistRepository.findByUserId(userId);
     }
+
+    public List<Playlist> getPlaylistsForCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return playlistRepository.findAll();
+        }
+
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return playlistRepository.findByUser(user);
+    }
 }
+

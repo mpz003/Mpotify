@@ -9,6 +9,7 @@ import Mpz003.Mpotify.service.PlaylistSongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +21,12 @@ public class PlaylistRestController {
 
     private PlaylistService playlistService;
     private PlaylistSongService playlistSongService;
+    private PlaylistRepository playlistRepository;
 
     @Autowired
-    public PlaylistRestController(PlaylistService playlistService, PlaylistSongService playlistSongService) {
+    public PlaylistRestController(PlaylistService playlistService, PlaylistSongService playlistSongService, PlaylistRepository playlistRepository) {
         this.playlistService = playlistService;
+        this.playlistRepository=playlistRepository;
         this.playlistSongService = playlistSongService;
     }
 
@@ -31,18 +34,28 @@ public class PlaylistRestController {
 
 
     @GetMapping("/playlists")
-    public List<Playlist> getAllPlaylists() {
-        return playlistService.getAllPlaylists();
+    public ResponseEntity<List<Playlist>> getOwnPlaylists() {
+        return ResponseEntity.ok(playlistService.getPlaylistsForCurrentUser());
     }
 
-    @GetMapping("playlists/{id}")
-    public Playlist getPlaylistById(@PathVariable int id){
-        Playlist thePlaylist = playlistService.getPlaylistById(id);
-        if (thePlaylist == null) {
-            throw new RuntimeException("Employee id not found - " + id);
+
+    @GetMapping("/playlists/{id}")
+    public ResponseEntity<Playlist> getPlaylistById(@PathVariable Integer id) {
+        Playlist playlist = playlistRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Playlist not found with id: " + id));
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !playlist.getUser().getUserName().equals(username)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 🔐 block access
         }
-        return thePlaylist;
+
+        return ResponseEntity.ok(playlist);
     }
+
 
     @PostMapping("/playlists")
     public Playlist addPlaylist(@RequestBody Playlist playlist) {
