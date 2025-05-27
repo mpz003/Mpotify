@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import static java.lang.foreign.MemorySegment.NULL;
 
 import static org.hibernate.engine.jdbc.env.spi.IdentifierCaseStrategy.LOWER;
 
+@RepositoryRestResource(exported = false)
 public interface SongRepository extends JpaRepository<Song,Integer> {
 
     @Query("SELECT s FROM Song s " +

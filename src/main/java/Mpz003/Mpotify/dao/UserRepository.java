@@ -12,7 +12,9 @@ import static java.lang.foreign.MemorySegment.NULL;
 import static org.hibernate.engine.jdbc.env.spi.IdentifierCaseStrategy.LOWER;
 import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+@RepositoryRestResource(exported = false)
 public interface UserRepository extends JpaRepository<User,Integer> {
 
     Optional<User> findByUserName(String userName);
