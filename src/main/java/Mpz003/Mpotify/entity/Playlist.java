@@ -20,15 +20,27 @@ public class Playlist {
     @JsonIgnore
     private User user;
 
+    public enum PlaylistType {
+        PUBLIC,
+        PRIVATE
+    }
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private PlaylistType type = PlaylistType.PRIVATE;
+
+
     public Playlist(){
 
     }
 
-    public Playlist(String name, User user) {
-        this.name=name;
-        this.user=user;
-
+    public Playlist(String name, User user, PlaylistType type) {
+        this.name = name;
+        this.user = user;
+        this.type = type;
     }
+
 
     public int getId() {
         return id;
@@ -54,11 +66,21 @@ public class Playlist {
         this.user = user;
     }
 
+    public PlaylistType getType() {
+        return type;
+    }
+
+    public void setType(PlaylistType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Playlist{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", user=" + user +
+                ", type=" + type +
                 '}';
     }
 }

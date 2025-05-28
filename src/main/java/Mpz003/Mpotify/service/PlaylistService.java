@@ -64,13 +64,14 @@ public class PlaylistService {
         return playlistRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public Playlist createPlaylistForUser(Integer userId, String name) {
+    public Playlist createPlaylistForUser(Integer userId, String name, Playlist.PlaylistType type) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        Playlist playlist = new Playlist(name, user);
+        Playlist playlist = new Playlist(name, user, type != null ? type : Playlist.PlaylistType.PRIVATE);
         return playlistRepository.save(playlist);
     }
+
 
     public List<Playlist> getPlaylistsByUserId(Integer userId) {
         return playlistRepository.findByUserId(userId);

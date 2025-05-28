@@ -16,4 +16,7 @@ public interface PlaylistRepository extends JpaRepository<Playlist,Integer> {
 
     List<Playlist> findByUser(User user);
 
+    List<Playlist> findByType(Playlist.PlaylistType type);
+
+
 }

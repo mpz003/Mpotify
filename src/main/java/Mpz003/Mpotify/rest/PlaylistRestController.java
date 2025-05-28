@@ -63,26 +63,29 @@ public class PlaylistRestController {
         return ResponseEntity.ok(playlist);
     }
 
-/*
-    @PostMapping("/playlists")
-    public Playlist addPlaylist(@RequestBody Playlist playlist) {
-        return playlistService.addPlaylist(playlist);
-    }
-*/
-
     @PostMapping("/playlists")
     public ResponseEntity<Playlist> createPlaylist(@RequestBody Playlist playlist,
                                                    @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
-
         User user = userRepository.findByUserName(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         playlist.setUser(user);
-        Playlist saved = playlistRepository.save(playlist);
 
-        return ResponseEntity.ok(saved);
+        // fallback to PRIVATE if not set
+        if (playlist.getType() == null) {
+            playlist.setType(Playlist.PlaylistType.PRIVATE);
+        }
+
+        return ResponseEntity.ok(playlistRepository.save(playlist));
     }
+
+    @GetMapping("/playlists/public")
+    public List<Playlist> getPublicPlaylists() {
+        return playlistRepository.findByType(Playlist.PlaylistType.PUBLIC);
+    }
+
+
 
     @PutMapping("/playlists/{id}")
     public ResponseEntity<?> updatePlaylist(@PathVariable Integer id,
@@ -164,10 +167,13 @@ public class PlaylistRestController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/playlists/users/{userId}/playlists")
     public ResponseEntity<Playlist> createPlaylist(@PathVariable Integer userId,
-                                                   @RequestParam String name) {
-        Playlist playlist = playlistService.createPlaylistForUser(userId, name);
+                                                   @RequestParam String name,
+                                                   @RequestParam(required = false) Playlist.PlaylistType type) {
+        Playlist playlist = playlistService.createPlaylistForUser(userId, name,
+                type != null ? type : Playlist.PlaylistType.PRIVATE);
         return ResponseEntity.ok(playlist);
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/playlists/users/{userId}/playlists")
