@@ -179,4 +179,9 @@ public class PlaylistRestController {
     public List<Playlist> getUserPlaylists(@PathVariable Integer userId) {
         return playlistService.getPlaylistsByUserId(userId);
     }
+
+    @GetMapping("/playlists/search")
+    public List<Playlist> searchPlaylists(@RequestParam(required = false) String name) {
+        return playlistService.searchPlaylistByName(name);
+    }
 }

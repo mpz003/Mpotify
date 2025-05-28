@@ -61,8 +61,21 @@ public class PlaylistService {
     }
 
     public List<Playlist> searchPlaylistByName(String name) {
-        return playlistRepository.findByNameContainingIgnoreCase(name);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return playlistRepository.findByNameContainingIgnoreCase(name);
+        }
+
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return playlistRepository.findByUserAndNameContainingIgnoreCase(user, name);
     }
+
 
     public Playlist createPlaylistForUser(Integer userId, String name, Playlist.PlaylistType type) {
         User user = userRepository.findById(userId)
