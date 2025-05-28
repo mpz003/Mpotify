@@ -4,7 +4,6 @@ import Mpz003.Mpotify.dao.PlaylistRepository;
 import Mpz003.Mpotify.dao.UserRepository;
 import Mpz003.Mpotify.entity.Playlist;
 import Mpz003.Mpotify.entity.PlaylistSong;
-import Mpz003.Mpotify.entity.Song;
 import Mpz003.Mpotify.entity.User;
 import Mpz003.Mpotify.service.PlaylistService;
 import Mpz003.Mpotify.service.PlaylistSongService;
@@ -180,5 +179,4 @@ public class PlaylistRestController {
     public List<Playlist> getUserPlaylists(@PathVariable Integer userId) {
         return playlistService.getPlaylistsByUserId(userId);
     }
-
 }

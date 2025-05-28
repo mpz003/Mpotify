@@ -8,12 +8,16 @@ import Mpz003.Mpotify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/mpz")
@@ -49,10 +53,32 @@ public class UserRestController {
         return userService.addUser(user);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/users/{id}")
-    public User updatingUser(@PathVariable Integer id, @RequestBody User updatedUser){
-        return userService.updateUser(id,updatedUser);
+    public ResponseEntity<?> updateUser(@PathVariable Integer id,
+                                        @RequestBody User updatedUser,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<User> existingOpt = userRepository.findById(id);
+        if (existingOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        User existingUser = existingOpt.get();
+        String authUsername = userDetails.getUsername();
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !existingUser.getUserName().equals(authUsername)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only edit your own account");
+        }
+
+        existingUser.setUserName(updatedUser.getUserName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPassword(encoder.encode(updatedUser.getPassword()));
+
+        return ResponseEntity.ok(userRepository.save(existingUser));
     }
+
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Integer id) {

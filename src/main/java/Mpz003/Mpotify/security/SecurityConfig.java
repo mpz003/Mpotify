@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/mpz/users/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/mpz/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/mpz/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/mpz/songs/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/mpz/songs/**").hasRole("ADMIN")
